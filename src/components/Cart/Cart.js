@@ -6,17 +6,21 @@ const Cart = (props) => {
 //    console.log(cart)
     let total=0;
     let shipping=0;
+    let quantity=0;
     for(const product of cart){
-        total=total+product.price;
+        quantity=quantity+ product.quantity;
+        total=total+product.price * product.quantity;
         shipping=shipping+product.shipping;
     }
+
     let tax= (total* 10/100).toFixed(2);
     let taxn= parseFloat(tax);
     let grandtotal=total+shipping+taxn;
+
     return (
         <div className='cart'>
              <h4>Oder Summary</h4>
-            <p>product-items: {cart.length}</p>
+            <p>product-items: {quantity}</p>
              <p>Total-price:${total}</p>
              <p>Total-Shipping:${shipping}</p>
              <p>Tex:${taxn}</p>

@@ -15,12 +15,23 @@ const Shope = () => {
     const [cart, setcart]= useState([]);
 
     
-    const handlerAddTOCart =(product)=>{
+    const handlerAddTOCart =(selectedProduct)=>{
         // console.log(product)
-        const newCart= [...cart, product]
-        setcart(newCart);
+        let newCart=[];
+        const exists=cart.find(product=>product.id===selectedProduct.id)
 
-        addToDb(product.id)
+        if(!exists){
+            selectedProduct.quantity=1;
+             newCart= [...cart, selectedProduct];
+
+        }else{
+            const rest=cart.filter(product=>product.id===selectedProduct.id);
+            exists.quantity=exists.quantity+1;
+            newCart=[...rest,exists]
+        }
+       setcart(newCart);
+
+        addToDb(selectedProduct.id)
         
     }
 
@@ -32,12 +43,19 @@ const Shope = () => {
 
     useEffect(()=>{
         const storedCart= getStoredCart();
+        const saveCart=[];
         // console.log(storedCart);
         for(const id in storedCart){
             const addedProduct= products.find(product=>product.id===id)
-            console.log(addedProduct)
+            if(addedProduct){
+                const quantity= storedCart[id]
+                addedProduct.quantity=quantity;
+                saveCart.push(addedProduct);
+            }
         }
-    },[])
+
+        setcart(saveCart);
+    },[products])
  
     return (
         <div className='shope-container'>
